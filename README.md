@@ -1,4 +1,4 @@
-This repository contains simulation notebooks and analysis pipelines developed for a Master's thesis project focused on modeling neuronal excitability. The project combines classical biophysical modeling with modern unsupervised deep learning techniques to categorize neuronal firing patterns and analyze developmental changes in neuron physiology.
+This repository contains simulation notebooks and analysis pipelines developed for a Master's thesis project focused on modeling neuronal excitability. The project combines classical biophysical modeling with modern unsupervised deep learning techniques to categorize neuronal firing patterns and analyze developmental changes in neuron physiology.  This repository is a work in progress and will be expanded.
 
 ## 📂 Project Overview
 
@@ -21,4 +21,6 @@ This module implements a detailed biophysical model to study the developmental d
 *   **Mechanisms:** Includes voltage-gated Sodium ($Na_v$), Potassium ($K_v$), Calcium ($Ca_v$), and Calcium-activated Potassium ($K_{Ca}$) channels.
 *   **Calcium Dynamics:** Implements Goldman-Hodgkin-Katz (GHK) flux equations and calcium buffering/diffusion dynamics.
 *   **Comparative Analysis:** Simulates the response to current injection to visualize differences in action potential shape, frequency, and underlying ionic currents between the two age groups.
-*   
+*   References : https://pubmed.ncbi.nlm.nih.gov/1607940/
+
+    https://www.pnas.org/doi/10.1073/pnas.1808552115
