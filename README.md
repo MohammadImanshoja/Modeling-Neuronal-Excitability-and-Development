@@ -12,7 +12,7 @@ This module explores the **Hodgkin-Huxley (HH)** model to generate diverse volta
     *   $S$: Ratio of sodium to total conductance.
     *   $K$: Ratio of gating time constants.
 *   **Feature Extraction:** Application of the **Wavelet Scattering Transform (WST)** using `kymatio` to create translation-invariant representations of voltage traces.
-*   **Dimensionality Reduction:** A dynamic **Deep Convolutional Variational Autoencoder (VAE)** trained on WST coefficients to compress features into a latent space.
+*   **Dimensionality Reduction:** A **Deep Convolutional Variational Autoencoder (VAE)** trained on WST coefficients to compress features into a latent space.
 *   **Clustering:** Utilization of **HDBSCAN** and **UMAP** on the VAE latent space to identify distinct neuronal firing phenotypes unsupervised.
 
 ### 2. Comparative Modeling: Young vs. Mature Neurons
