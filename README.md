@@ -1,8 +1,8 @@
 ## (Master’s Thesis)
 
-This repository contains simulation notebooks and analysis pipelines developed for a Master’s thesis project focused on modeling neuronal excitability and organizing neuronal firing phenotypes using modern unsupervised learning. The codebase combines **classical biophysical modeling** with **wavelet-based feature extraction** and **deep/unsupervised representations** to study excitability regimes and developmental physiology.
+This repository contains notebooks and analysis pipelines developed as part of a Master’s thesis project focused on understanding neuronal excitability and organizing neuronal firing behaviors using data-driven approaches. The work combines computational modeling with signal-based feature extraction and unsupervised analysis, and is applied to both simulated neuronal activity and publicly available Patch-seq electrophysiology datasets (e.g. DANDI). Together, these notebooks explore how different excitability patterns emerge across models and experimental recordings.
 
-> **Status:** Work in progress. The research and analyses are continuing and the full pipeline is **not completed yet**.
+Status: Work in progress. The research and analyses are ongoing, and the full pipeline is not yet completed.
 
 ---
 
