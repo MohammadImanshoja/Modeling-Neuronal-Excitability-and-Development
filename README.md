@@ -1,4 +1,4 @@
-##(Master’s Thesis)
+## (Master’s Thesis)
 
 This repository contains simulation notebooks and analysis pipelines developed for a Master’s thesis project focused on modeling neuronal excitability and organizing neuronal firing phenotypes using modern unsupervised learning. The codebase combines **classical biophysical modeling** with **wavelet-based feature extraction** and **deep/unsupervised representations** to study excitability regimes and developmental physiology.
 
