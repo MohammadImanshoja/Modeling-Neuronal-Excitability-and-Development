@@ -17,6 +17,10 @@ Unsupervised phenotyping using simulated voltage traces from the Hodgkin–Huxle
 - **Compression:** Deep latent representation (e.g., VAE/AE variants) to embed WST coefficients into a compact space.
 - **Clustering + visualization:** HDBSCAN / KMeans and UMAP in embedding space to discover firing phenotypes without labels.
 
+**References (from prior module notes):**
+- https://www.pnas.org/doi/10.1073/pnas.1808552115
+
+  
 ---
 
 ### 2) **mature_and_young_neuron.ipynb**
@@ -28,11 +32,10 @@ Comparative biophysical modeling to study intrinsic excitability differences bet
 
 **References (from prior module notes):**
 - https://pubmed.ncbi.nlm.nih.gov/1607940/
-- https://www.pnas.org/doi/10.1073/pnas.1808552115
 
 ---
 
-### 3) **WST_DANDI_DATASET.ipynb**  *(this notebook)*
+### 3) **WST_DANDI_DATASET.ipynb** 
 End-to-end pipeline on real Patch-seq electrophysiology data from **DANDI:000008**, including WST extraction and alignment to manual electrophysiological feature tables.
 
 What this notebook does (high level):
