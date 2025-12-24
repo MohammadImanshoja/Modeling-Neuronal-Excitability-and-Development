@@ -1,9 +1,9 @@
 ## (Master’s Thesis)
 
 This repository contains notebooks and analysis pipelines developed as part of a Master’s thesis project focused on understanding neuronal dynamics and organizing neuronal behavioral patterns using data-driven approaches. The work combines computational modeling with signal-based feature extraction and unsupervised analysis, and is applied to both simulated neuronal activity and publicly available Patch-seq electrophysiology datasets (e.g. DANDI). 
-
+---
 Status: Work in progress. The research and analyses are ongoing, and the full pipeline is not yet completed.
-
+---
 ---
 
 ## 📂 Repository Structure (Notebooks)
