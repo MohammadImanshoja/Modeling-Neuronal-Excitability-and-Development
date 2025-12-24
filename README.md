@@ -98,8 +98,3 @@ What this notebook does (high level):
 
 This repository is part of an active thesis workflow and is still evolving. 
 
----
-
-## License / Notes
-
-This repo is intended for academic/research use as part of a thesis project. Data usage should follow the relevant DANDI dataset terms and citation guidance.
