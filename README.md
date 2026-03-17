@@ -73,7 +73,7 @@ The comparison shows that classification based on WST representations achieves h
 Interpretation:
 The improvement is not only due to model complexity, but to the representation itself: WST preserves both local waveform structure and broader response patterns across stimulus conditions, allowing the classifier to exploit information that is lost in manual feature extraction.
 
-### 5) 5) DISTANCE_ANALYSIS.ipynb
+### 5) DISTANCE_ANALYSIS.ipynb
 
 Comparison of mathematical similarity in WST space versus biological similarity in manual electrophysiological feature space.
 
