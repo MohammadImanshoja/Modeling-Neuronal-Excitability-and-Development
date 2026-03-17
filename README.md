@@ -1,100 +1,65 @@
-## (Master’s Thesis)
+# (Master’s Thesis) Data-Driven Phenotyping of Neuronal Dynamics
 
-This repository contains notebooks and analysis pipelines developed as part of a Master’s thesis project focused on understanding neuronal dynamics and organizing neuronal behavioral patterns using data-driven approaches. The work combines computational modeling with signal-based feature extraction and unsupervised analysis, and is applied to both simulated neuronal activity and publicly available Patch-seq electrophysiology datasets (e.g. DANDI). 
+This repository contains the full research pipeline for a Master’s thesis project. The work focuses on identifying neuronal phenotypes by combining computational modeling with a **Dual-Dynamics** analytical perspective on Patch-seq electrophysiology data.
 
-Status: Work in progress. The research and analyses are ongoing, and the full pipeline is not yet completed.
+**Key Innovation:** We treat neuronal activity as a nested dynamical system. By analyzing voltage traces across a range of current injections (Sweeps 10–70), we capture both the **fast temporal dynamics** (individual action potential morphology) and the **slow stimulus-response dynamics** (the F-I curve and adaptation properties).
 
----
-
-## 📂 Repository Structure (Notebooks)
-
-### 1) **HH_WST_VAE_Pipeline.ipynb**
-Unsupervised phenotyping using simulated voltage traces from the Hodgkin–Huxley (HH) model.
-
-- **Simulation:** HH model runs across randomized parameter ranges (e.g., conductances) to generate diverse firing behaviors (non-excitable, excitable, oscillatory).
-- **Regime visualization:** S–K plane style regime exploration (geometric/biophysical parameterization).
-- **Feature extraction:** Wavelet Scattering Transform (WST, `kymatio`) for translation-invariant representations of voltage traces.
-- **Compression:** Deep latent representation (e.g., VAE/AE variants) to embed WST coefficients into a compact space.
-- **Clustering + visualization:** HDBSCAN / KMeans and UMAP in embedding space to discover firing phenotypes without labels.
-
-**References (from prior module notes):**
-- https://www.pnas.org/doi/10.1073/pnas.1808552115
-
-  
----
-
-### 2) **mature_and_young_neuron.ipynb**
-Comparative biophysical modeling to study intrinsic excitability differences between young and mature neurons.
-
-- **Mechanisms:** Includes voltage-gated Na\_v, K\_v, Ca\_v, and Ca-activated K\_Ca channels.
-- **Calcium dynamics:** Uses GHK flux + buffering/diffusion dynamics for intracellular Ca handling.
-- **Comparison:** Simulates responses to current injection and compares AP shape/frequency and underlying ionic currents between age groups.
-
-**References (from prior module notes):**
-- https://pubmed.ncbi.nlm.nih.gov/1607940/
+**Status:** Completed.
 
 ---
 
-### 3) **WST_DANDI_DATASET.ipynb** 
-End-to-end pipeline on real Patch-seq electrophysiology data from **DANDI:000008**, including WST extraction and alignment to manual electrophysiological feature tables.
+## 📂 Repository Structure
 
-What this notebook does (high level):
+### 1) HH_WST_VAE_Pipeline.ipynb
+*Unsupervised phenotyping of simulated Hodgkin–Huxley (HH) dynamics.*
+* **Simulation:** Generates a synthetic dataset of excitable, oscillatory, and non-excitable behaviors by sampling the HH parameter space.
+* **Architecture:** Extracts Wavelet Scattering Transform (WST) coefficients and uses a CNN-based Variational Autoencoder (VAE) to learn a compact, latent representation of firing regimes.
+* **Clustering:** Uses HDBSCAN to discover biophysical phenotypes without labels.
 
-1. **Download raw NWB data**
-   - Uses `dandi` to download `DANDI:000008/0.211014.0809` into the notebook environment.
+### 2) mature_and_young_neuron.ipynb
+*Biophysical modeling of neuronal maturation.*
+* **Mechanisms:** Implements Na_v, K_v, Ca_v, and K_Ca channels with GHK flux dynamics for calcium handling.
+* **Analysis:** Quantifies the shift in intrinsic excitability and ionic current contributions as neurons transition from "young" to "mature" developmental states.
 
-2. **Extract voltage traces from NWB**
-   - Iterates over NWB files, selects a specific sweep (e.g., `CurrentClampSeries020`).
-   - Collects voltage traces across cells and records trace lengths.
+### 3) WST_DANDI_DATASET_SINGLE_SWEEP.ipynb
+*Exploratory signal analysis on real Patch-seq data.*
+* **Standardization:** Downloads data from DANDI:000008 and performs length-harmonization (25,000 samples).
+* **High-Level Mapping:** Extracts WST coefficients for single sweeps (e.g., Sweep 20) and visualizes the mathematical "fingerprint" (S1 and S2 coefficients) alongside raw voltage traces for various transcriptomic RNA families.
 
-3. **Length harmonization**
-   - Finds the **most common trace length (mode)** and keeps only cells matching this length.
-   - Exports a standardized CSV where:
-     - rows = time samples  
-     - columns = cells  
-     - file example: `voltage___traces2345.csv`
+### 4) CLASSIFICATION.ipynb (Core Analysis)
+*The Primary Pipeline: Mapping Dual-Dynamics to RNA Identity.*
+* **The Logic:** Stacks sweeps 10 through 70 to capture the system's evolution from low to high external current. 
+* **Feature Engineering:** Computes high-resolution WST ($J=12, Q=20$) on these stacked traces. This captures temporal features and the dynamical shift caused by increased external input.
+* **Mapping:** Integrates transcriptomic metadata to evaluate how well these "dual-dynamic" WST features separate biological cell types in UMAP space.
 
-4. **Wavelet Scattering Transform (WST)**
-   - Computes WST with `kymatio.torch.Scattering1D` (GPU if available).
-   - Extracts and saves:
-     - full coefficients, S1, S2
-     - metadata (frequencies / ordering)
-   - Outputs include: `GPU_WST_full.npy`, `GPU_WST_S1.npy`, `GPU_WST_S2.npy`, and a combined `.npz`.
-
-5. **Merge with manual electrophysiological features**
-   - Loads the manual feature table: `m1_patchseq_ephys_features.csv`
-   - Aligns common cells (via ID/key normalization inside the notebook) and builds an aligned table `ephys_common`.
-
-6. **UMAP on ephys features + RNA family coloring**
-   - Filters out incomplete rows (NaNs) and runs:
-     - StandardScaler → UMAP(2D)
-   - Merges RNA-family labels from metadata (e.g., `m1_patchseq_meta_data (1).csv`)
-   - Plots UMAP colored by RNA family.
+### 5) DISTANCE_ANALYSIS.ipynb
+*Comparison of Mathematical vs. Biological Similarity.*
+* **Feature Comparison:** Calculates pairwise distances between cells in the WST feature space versus the traditional manual EPHYS feature space.
+* **Analysis:** Uses KDE contour maps and quadrant analysis to identify where WST representations reveal nuances in cell behavior that traditional manual features might overlook.
 
 ---
 
-> GPU is optional but recommended for faster WST computation.
+## 📊 External Data Sources
+
+To run the DANDI notebooks (3, 4, and 5), you must download the following datasets provided by [Gouwens et al., Nature (2020)](https://www.nature.com/articles/s41586-020-2907-3).
+
+**Ensure these files exist in your working directory or update the paths within the notebooks:**
+
+1.  **`m1_patchseq_ephys_features.csv`**: Contains manual electrophysiological features.
+2.  **`m1_patchseq_meta_data (1).csv`**: Contains the RNA family labels (transcriptomic ground truth).
+3.  **DANDI Dataset**: The notebooks use the `dandi` CLI to download NWB files from [DANDI:000008](https://dandiarchive.org/dandiset/000008).
 
 ---
 
-## ▶️ How to Run (General)
+## 🧠 Methodological Note: Why Multi-Sweep?
+Standard analysis often focuses on a single "hero" sweep (e.g., the first sweep with a spike). This project argues that a neuron's identity is found in its **transition** across stimulus strengths. By stacking sweeps 20 through 70, the Scattering Transform encodes:
+1.  **Fast-scale info:** Spike width, AHP, and kinetics.
+2.  **Slow-scale info:** Firing frequency adaptation and rheobase transitions.
 
-1. Open notebooks in Colab / Jupyter.
-2. For the DANDI notebook:
-   - Ensure you have enough disk space for dataset download.
-   - Run the download cells first.
-3. Make sure the following files exist at the expected paths (or update the paths in the notebook):
-   - `m1_patchseq_ephys_features.csv`(used from https:// www.nature.com/articles/s 41586 020 2907 3)
-   - `m1_patchseq_meta_data (1).csv` (RNA family labels) (used from https:// www.nature.com/articles/s 41586 020 2907 3)
-
+This provides a more robust "dynamic fingerprint" for cell-type classification.
 
 ---
-## References :
 
--https://dandiarchive.org/dandiset/ 000008
--https:// www.nature.com/articles/s 41586 020 2907 3
-
-## 🚧 Ongoing Work / Next Steps
-
-This repository is part of an active thesis workflow and is still evolving. 
-
+## ▶️ Setup
+* **Hardware:** A GPU is strongly recommended for notebooks 3, 4, and 5 due to the computational intensity of the Wavelet Scattering Transform on multi-sweep stacks.
+* **Libraries:** `kymatio`, `pytorch`, `dandi`, `pynwb`, `umap-learn`, `hdbscan`, `pandas`, `numpy`.
