@@ -12,13 +12,13 @@ The core innovation of this work is the **Dual-Dynamics Perspective**. We analyz
 
 ### 1) HH_WST_VAE_Pipeline.ipynb
 *Unsupervised phenotyping of simulated Hodgkin–Huxley (HH) dynamics.*
-* **Foundational Theory:** Based on **Ori et al. (2018)**, *Cellular function given parametric variation in the Hodgkin and Huxley model of excitability*.
+* **Foundational Theory:** Based on **Ori et al. ([2018](https://www.pnas.org/doi/epdf/10.1073/pnas.1808552115))**, *Cellular function given parametric variation in the Hodgkin and Huxley model of excitability*.
 * **Logic:** Explores how cellular function is maintained despite parameter variability (S-K plane). 
 * **Pipeline:** Uses Wavelet Scattering Transform (WST) and a CNN-based Variational Autoencoder (VAE) to cluster biophysical regimes (excitable, oscillatory, etc.) in an unsupervised latent space.
 
 ### 2) mature_and_young_neuron.ipynb
 *Biophysical modeling of neuronal maturation.*
-* **Foundational Theory:** Based on **Lockery & Spitzer (1992)**, *Reconstruction of Action Potential Development from Whole-Cell Currents*.
+* **Foundational Theory:** Based on **Lockery & Spitzer ([1992](https://pubmed.ncbi.nlm.nih.gov/1607940/))**, *Reconstruction of Action Potential Development from Whole-Cell Currents*.
 * **Logic:** Implements the specific ionic current changes (Na, K, Ca, K_Ca) and GHK flux dynamics described in the paper to simulate the developmental transition from "young" to "mature" action potential profiles.
 
 ### 3) WST_DANDI_DATASET_SINGLE_SWEEP.ipynb
