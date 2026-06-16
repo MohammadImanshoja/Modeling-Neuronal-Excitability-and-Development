@@ -88,8 +88,12 @@ use this repository, please cite the original study and data sources:
 > Berens Lab — mini-atlas repository: https://github.com/berenslab/mini-atlas
 
 **Raw electrophysiological recordings (NWB, used for the WST pipeline)**
-> Scala, F., et al. *Patch-seq recordings from mouse primary motor cortex.* DANDI Archive,
-> dandiset 000008. https://dandiarchive.org/dandiset/000008
+> Scala, F., Kobak, D., Bernabucci, M., Bernaerts, Y., Cadwell, C. R., Castro, J. R.,
+> Hartmanis, L., Jiang, X., Laturnus, S., Miranda, E., Mulherkar, S., Tan, Z. H., Yao, Z.,
+> Zeng, H., Sandberg, R., Berens, P., & Tolias, A. S. (2021). *Phenotypic variation within
+> and across transcriptomic cell types in mouse motor cortex* (Version 0.211014.0809)
+> [Data set]. DANDI Archive. https://doi.org/10.48324/dandi.000008/0.211014.0809
+> (RRID:SCR_017571). Licensed under CC BY 4.0.
 
 ### How the external files were used
 - `m1_patchseq_meta_data.csv` — transcriptomic cell-type / family annotations, used as
