@@ -116,27 +116,24 @@ Main Role in the Project:
 This notebook is the validation layer of the thesis. It moves beyond visualization and classification to test whether the WST captures meaningful neuronal dynamics that are not fully represented by traditional handcrafted electrophysiological summaries.
 
 ---
+📊 External Data & References
 
-## 📊 External Data & References
+To ensure reproducibility, this project uses external data and metadata from:
 
-To ensure reproducibility, the following external files from **Gouwens et al. (2020)**, *Classification of neocortical neurons by morphological and physiological phenotypes* ([Nature Paper](https://www.nature.com/articles/s41586-020-2907-3)), must be present:
+Scala, F.*, Kobak, D.*, Bernabucci, M., Bernaerts, Y., Cadwell, C. R., Castro, J. R., Hartmanis, L., Jiang, X., Laturnus, S., Miranda, E., Mulherkar, S., Tan, Z. H., Yao, Z., Zeng, H., Sandberg, R., Berens, P., & Tolias, A. S.
+Phenotypic variation of transcriptomic cell types in mouse motor cortex.
+Nature, 598, 144–150 (2021).
+DOI: 10.1038/s41586-020-2907-3
 
-| File Name | Description | Source |
-| :--- | :--- | :--- |
-| `m1_patchseq_ephys_features.csv` | Manual electrophysiological features | Gouwens et al. (2020) |
-| `m1_patchseq_meta_data (1).csv` | Transcriptomic (RNA family) labels | Gouwens et al. (2020) |
-| **DANDI:000008** | Raw NWB Electrophysiology data | [DANDI Archive](https://dandiarchive.org/dandiset/000008) |
+The following files and resources were used:
 
----
+| File / Resource                | Description                                                    | Source                                           |
+| ------------------------------ | -------------------------------------------------------------- | ------------------------------------------------ |
+| m1_patchseq_ephys_features.csv | Predefined/manual electrophysiological features                | Scala et al., Nature 2021 / BerensLab mini-atlas |
+| m1_patchseq_meta_data.csv      | Metadata including transcriptomic cell-type/family annotations | Scala et al., Nature 2021 / BerensLab mini-atlas |
+| DANDI:000008                   | Raw Patch-seq electrophysiological NWB recordings              | DANDI Archive, linked to Scala et al. dataset    |
 
-## 🧠 Methodological Summary: Stacking Sweeps 10–70
-A central thesis of this work is that a neuron’s identity is encoded in how it **evolves** as a dynamical system. By stacking multiple sweeps, we provide the Wavelet Scattering Transform with:
-1.  **Intra-sweep information:** AP kinetics and waveform shape.
-2.  **Inter-sweep information:** The transition from sub-threshold behavior to repetitive firing and eventual saturation.
-
-This holistic representation provides a significantly more robust "dynamic fingerprint" for identifying cell types compared to single-sweep analysis.
-
----
+In this thesis, the transcriptomic cell-type/family labels and predefined electrophysiological features from Scala et al. were used as biological reference annotations. These were compared with data-driven Wavelet Scattering Transform representations learned directly from neuronal voltage traces.
 
 ## ▶️ Setup
 * **Hardware:** A GPU is essential for the WST computation on the multi-sweep stacks in Notebooks 4 and 5.
