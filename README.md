@@ -50,7 +50,7 @@ In this notebook:
 
 ---
 
-## 4) CLASSIFICATION.ipynb
+## 4) Classification WST.ipynb
 
 This notebook is the main supervised classification part of the thesis.
 
