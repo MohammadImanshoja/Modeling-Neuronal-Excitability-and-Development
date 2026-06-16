@@ -1,148 +1,180 @@
-# Master’s Thesis: Data-Driven Phenotyping of Neuronal Dynamics
+# Master's Thesis — Data-Driven Phenotyping of Neuronal Dynamics
 
-This repository contains the completed pipeline for my Master’s thesis project on data-driven phenotyping of neuronal electrophysiological dynamics.
+This repository contains the complete pipeline for my Master's thesis on data-driven
+phenotyping of neuronal electrophysiological dynamics.
 
-The main idea of this project is to analyze neuronal voltage traces not only as static signals, but as dynamical responses. I focused on two levels of dynamics: the fast temporal structure of action potentials and the slower change in neuronal response across increasing current injections. The main goal was to test whether Wavelet Scattering Transform representations can capture biologically meaningful information from voltage traces and compare this with traditional manually extracted electrophysiological features.
+The central idea is to analyse neuronal voltage traces not as static signals but as
+**dynamical responses**, at two levels: the fast temporal structure of individual action
+potentials, and the slower change in a neuron's response across increasing current
+injections. The main goal is to test whether **Wavelet Scattering Transform (WST)**
+representations capture biologically meaningful information from voltage traces, and to
+compare them against traditional, manually extracted electrophysiological features.
 
----
-
-## 1) HH_WST_VAE_Pipeline.ipynb
-
-This notebook is the first theoretical part of the project. It uses simulated Hodgkin–Huxley dynamics to test whether Wavelet Scattering representations can capture different biophysical regimes of neuronal activity.
-
-The notebook is based on the idea that different combinations of model parameters can still produce functional neuronal behavior. WST is applied to simulated traces, and a CNN-based Variational Autoencoder is used to explore the structure of the learned latent space.
-
-Reference:
-
-Ori et al. 2018
-Cellular function given parametric variation in the Hodgkin and Huxley model of excitability
-https://www.pnas.org/doi/epdf/10.1073/pnas.1808552115
+All real-data analyses use the public Patch-seq dataset of mouse primary motor cortex from
+**Scala et al. (2021, *Nature*)**. See [Data attribution](#data-attribution--how-to-cite).
 
 ---
 
-## 2) mature_and_young_neuron.ipynb
+## Repository structure
 
-This notebook models the developmental transition between young and mature neuronal action potentials.
+### 1) `HH_WST_VAE_Pipeline.ipynb`
+The first, theoretical part of the project. Simulated Hodgkin–Huxley dynamics are used to
+test whether WST representations can separate different biophysical regimes of neuronal
+activity. WST is applied to simulated traces, and a CNN-based Variational Autoencoder is
+used to explore the structure of the learned latent space. Motivated by Ori et al. (2018),
+who show that different parameter combinations can still yield functional neuronal
+behaviour.
 
-It is based on Lockery and Spitzer 1992 and implements changes in ionic currents such as Na, K, Ca, and KCa currents. The aim is to show how changes in ion-channel dynamics can reshape the voltage response of a neuron.
+### 2) `mature_and_young_neuron.ipynb`
+Models the developmental transition between young and mature neuronal action potentials,
+based on Lockery & Spitzer (1992). It implements changes in ionic currents (Na, K, Ca, KCa)
+to show how ion-channel dynamics reshape the voltage response of a neuron.
 
-Reference:
+### 3) `WST_DANDI_DATASET_SINGLE_SWEEP.ipynb`
+The first application of the pipeline to real Patch-seq data. One representative sweep is
+extracted per cell from the raw NWB recordings (DANDI:000008), and WST is applied directly
+to the voltage trace. The resulting embeddings are compared against the transcriptomic
+cell-type / family labels to test whether a single-sweep WST representation already carries
+biological structure.
 
-Lockery and Spitzer 1992
-Reconstruction of Action Potential Development from Whole-Cell Currents
-https://pubmed.ncbi.nlm.nih.gov/1607940/
+- Raw NWB voltage traces from DANDI:000008 → WST analysis.
+- Metadata from Scala et al. (2021) → transcriptomic family labels only.
+- Labels are used to interpret whether signal-derived WST embeddings align with known
+  transcriptomic classes.
 
----
+### 4) `Classification_WST.ipynb`
+The main supervised-classification part of the thesis: comparing classical, feature-based
+machine learning against WST-based deep learning for predicting transcriptomic **RNA family**.
 
-## 3) WST_DANDI_DATASET_SINGLE_SWEEP.ipynb
+- **Classical baseline** — the predefined electrophysiological features from Scala et al.
+  (manually extracted scalar descriptors), used as input to **KNN**, **Random Forest**, and
+  **SVM**.
+- **WST-based deep learning** — for each cell, sweeps 10–70 are stacked to represent the
+  neuron's response across increasing current injections, and WST is applied to the stacked
+  trace. The first-order scattering output (S1) is used as input to **ResNet18**, **VGG16**,
+  and **Inception V3**.
 
-This notebook is the first application of the pipeline to real Patch-seq electrophysiological data.
+Excitatory subclasses are merged into a single class, **CT_ET_IT**, while the inhibitory
+classes **Pvalb, Sst, Vip, and Lamp5** are kept separate. Crucially, **all six models are
+trained and evaluated on one shared, stratified split** (identical cross-validation folds
+and identical held-out test cells), so any difference in performance reflects the input
+representation and classifier — not differences in the selected neurons or data split.
 
-The raw NWB electrophysiological recordings are taken from DANDI:000008. In this notebook, one representative sweep is extracted from each cell, and Wavelet Scattering Transform is applied directly to the voltage traces.
-
-The goal is to test whether a single-sweep WST representation already contains biological structure. The WST embeddings are then compared with the transcriptomic cell-type/family labels provided in the metadata from Scala et al.
-
-In this notebook:
-
-* Raw NWB voltage traces from DANDI:000008 are used for the Wavelet Scattering analysis.
-* Metadata from Scala et al. are used only for transcriptomic cell-type/family labels.
-* The labels are used to interpret whether the signal-derived WST embeddings align with known transcriptomic classes.
-
----
-
-## 4) Classification WST.ipynb
-
-This notebook is the main supervised classification part of the thesis.
-
-The goal is to compare classical feature-based machine learning with WST-based deep learning.
-
-For the classical machine learning baseline, I used the predefined electrophysiological features from Scala et al. These are manually extracted scalar features. They were used as input for:
-
-* KNN
-* Random Forest
-* SVM
-
-For the WST-based models, I did not use the manual electrophysiological features as input. Instead, I used the raw voltage traces from DANDI:000008. For each cell, sweeps 10–70 were stacked to represent the response of the neuron across increasing current injections. Then, Wavelet Scattering Transform was applied to these stacked traces.
-
-The WST representations were used as input for:
-
-* ResNet18
-* VGG16
-* InceptionV3
-
-The transcriptomic cell-type/family labels from the metadata were used as the classification labels. Excitatory subclasses were merged into one class, CT_ET_IT, while inhibitory classes such as Pvalb, Sst, Vip, and Lamp5 were kept separated.
-
-This notebook compares two different ways of representing neuronal identity: manual electrophysiological features versus data-driven WST representations learned directly from voltage dynamics.
-
----
-
-## 5) DISTANCE_ANALYSIS.ipynb
-
-This notebook compares similarity between neurons in two spaces.
-
-First, it computes distances between neurons using WST representations learned from stacked voltage traces. Second, it computes distances between the same neurons using the predefined manual electrophysiological features.
-
-The aim is to see whether neurons that are close in WST space are also close in classical electrophysiological feature space, and to find cases where the two representations agree or disagree.
-
-For this analysis:
-
-* Raw voltage traces from DANDI:000008 are used to compute WST representations.
-* Predefined electrophysiological features from Scala et al. are used as the classical feature space.
-* Transcriptomic cell-type/family labels from the metadata are used to interpret the biological identity of the compared cells.
-
-This notebook acts as a validation step to examine whether WST captures meaningful neuronal dynamics beyond traditional handcrafted features.
+### 5) `DISTANCE_ANALYSIS.ipynb`
+Compares neuron-to-neuron similarity in two spaces: distances computed from WST
+representations of stacked voltage traces, versus distances computed from the predefined
+manual electrophysiological features. The aim is to see whether neurons that are close in
+WST space are also close in classical feature space, and to surface cases where the two
+representations agree or disagree — a validation step examining whether WST captures
+neuronal dynamics beyond handcrafted features.
 
 ---
 
-## External Data and References
+## Key results (Notebook 4)
 
-This project uses public Patch-seq data and metadata from:
+Final-test performance for RNA-family classification on the shared test set (231 cells),
+with 3-fold cross-validation accuracy on the shared CV pool:
 
-Scala, F.*, Kobak, D.*, Bernabucci, M., Bernaerts, Y., Cadwell, C. R., Castro, J. R., Hartmanis, L., Jiang, X., Laturnus, S., Miranda, E., Mulherkar, S., Tan, Z. H., Yao, Z., Zeng, H., Sandberg, R., Berens, P., & Tolias, A. S.
-Phenotypic variation of transcriptomic cell types in mouse motor cortex.
-Nature, 598, 144–150, 2021.
-DOI: https://doi.org/10.1038/s41586-020-2907-3
+| Model          | Input representation        | Test accuracy | CV accuracy (mean ± SD) |
+|----------------|-----------------------------|:-------------:|:-----------------------:|
+| ResNet18       | WST S1 (deep learning)      | 0.952         | 0.940 ± 0.011           |
+| SVM            | Predefined ephys features   | 0.948         | 0.920 ± 0.033           |
+| Random Forest  | Predefined ephys features   | 0.935         | 0.909 ± 0.027           |
+| Inception V3   | WST S1 (deep learning)      | 0.931         | 0.933 ± 0.013           |
+| VGG16          | WST S1 (deep learning)      | 0.922         | 0.919 ± 0.007           |
+| KNN            | Predefined ephys features   | 0.892         | 0.843 ± 0.013           |
 
-The original analysis code and preprocessed data are available here:
-
-https://github.com/berenslab/mini-atlas
+**Takeaway.** The best WST-based deep network (ResNet18) and the best feature-based
+classifier (SVM) perform comparably, and the top models overlap within their
+cross-validation error bars. This suggests that a data-driven WST representation learned
+directly from voltage dynamics is competitive with carefully handcrafted electrophysiological
+features for transcriptomic-family prediction, while KNN remains a clearly weaker baseline.
 
 ---
 
-## How the External Data Were Used
+## Data attribution
 
-The external files were used in three different ways.
+This project uses public Patch-seq data and metadata from the Berens/Tolias mini-atlas. If
+you use this repository, please cite the original study and data sources:
 
-The file m1_patchseq_meta_data.csv was used for transcriptomic cell-type/family annotations. These labels were used for visualization, classification, and biological interpretation.
+**Primary publication**
+> Scala, F.\*, Kobak, D.\*, Bernabucci, M., Bernaerts, Y., Cadwell, C. R., Castro, J. R.,
+> Hartmanis, L., Jiang, X., Laturnus, S., Miranda, E., Mulherkar, S., Tan, Z. H., Yao, Z.,
+> Zeng, H., Sandberg, R., Berens, P., & Tolias, A. S. (2021). *Phenotypic variation of
+> transcriptomic cell types in mouse motor cortex.* **Nature, 598(7879), 144–150.**
+> https://doi.org/10.1038/s41586-020-2907-3
 
-The file m1_patchseq_ephys_features.csv was used for predefined/manual electrophysiological features. These features were used for the classical machine learning baselines and for the distance-analysis comparison.
+**Preprocessed data and analysis code (CSV files used here)**
+> Berens Lab — mini-atlas repository: https://github.com/berenslab/mini-atlas
 
-The raw NWB electrophysiological recordings from DANDI:000008 were used for the Wavelet Scattering pipeline. These raw voltage traces were used to compute WST representations directly from neuronal activity.
+**Raw electrophysiological recordings (NWB, used for the WST pipeline)**
+> Scala, F., et al. *Patch-seq recordings from mouse primary motor cortex.* DANDI Archive,
+> dandiset 000008. https://dandiarchive.org/dandiset/000008
 
-In short, the metadata and manual feature files were used as biological labels and classical baselines, while the raw voltage traces were used for the Wavelet Scattering representations.
+### How the external files were used
+- `m1_patchseq_meta_data.csv` — transcriptomic cell-type / family annotations, used as
+  classification labels and for biological interpretation.
+- `m1_patchseq_ephys_features.csv` — predefined / manually extracted electrophysiological
+  features, used for the classical machine-learning baselines and the distance analysis.
+- Raw NWB traces from **DANDI:000008** — used to compute WST representations directly from
+  neuronal activity.
+
+In short: the metadata and manual-feature CSVs serve as biological labels and classical
+baselines, while the raw voltage traces drive the Wavelet Scattering representations.
 
 ---
 
 ## Setup
 
-A GPU is recommended for the Wavelet Scattering and deep learning parts of the project.
+A GPU is recommended for the Wavelet Scattering and deep-learning notebooks.
 
-Main Python libraries used:
+Main libraries:
 
-* kymatio
-* torch
-* torchvision
-* scikit-learn
-* numpy
-* pandas
-* matplotlib
-* seaborn
-* umap-learn
-* pynwb
-* dandi
+```
+kymatio  torch  torchvision  scikit-learn  numpy  pandas
+matplotlib  seaborn  umap-learn  pynwb  dandi
+```
+
+Quick install (Colab / fresh environment):
+
+```bash
+pip install kymatio torch torchvision scikit-learn numpy pandas \
+            matplotlib seaborn umap-learn pynwb dandi
+```
 
 ---
 
-## Data Availability
+## Data availability
 
-Large external data files are not redistributed in this repository. To reproduce the analyses, the required data should be downloaded from the original public sources, including the BerensLab mini-atlas repository and DANDI:000008.
+Large external data files are not redistributed in this repository. To reproduce the
+analyses, download the required data from the original public sources:
+
+- Preprocessed metadata and feature CSVs — https://github.com/berenslab/mini-atlas
+- Raw NWB electrophysiology — https://dandiarchive.org/dandiset/000008
+
+---
+
+## References
+
+1. Scala, F., Kobak, D., Bernabucci, M., et al. (2021). Phenotypic variation of
+   transcriptomic cell types in mouse motor cortex. *Nature*, 598(7879), 144–150.
+   https://doi.org/10.1038/s41586-020-2907-3
+2. Ori, H., Marder, E., & Marom, S. (2018). Cellular function given parametric variation in
+   the Hodgkin–Huxley model of excitability. *PNAS*.
+   https://www.pnas.org/doi/10.1073/pnas.1808552115
+3. Lockery, S. R., & Spitzer, N. C. (1992). Reconstruction of action potential development
+   from whole-cell currents. https://pubmed.ncbi.nlm.nih.gov/1607940/
+
+**Methods references**
+4. Mallat, S. (2012). Group invariant scattering. *Communications on Pure and Applied
+   Mathematics.* (Wavelet Scattering Transform.)
+5. Andén, J., & Mallat, S. (2014). Deep scattering spectrum. *IEEE Transactions on Signal
+   Processing.*
+6. Andreux, M., et al. (2020). Kymatio: Scattering transforms in Python. *JMLR.*
+7. He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep residual learning for image
+   recognition. *CVPR.* (ResNet.)
+8. Simonyan, K., & Zisserman, A. (2015). Very deep convolutional networks for large-scale
+   image recognition. *ICLR.* (VGG.)
+9. Szegedy, C., et al. (2016). Rethinking the Inception architecture for computer vision.
+   *CVPR.* (Inception V3.)
+
